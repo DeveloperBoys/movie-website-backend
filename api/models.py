@@ -74,7 +74,7 @@ class MovieFile(models.Model):
             return "%s%s" % (settings.HOST, self.image.url)
 
     @property
-    def file_url(self):
+    def video_url(self):
         if self.video:
             return "%s%s" % (settings.HOST, self.video.url)
 

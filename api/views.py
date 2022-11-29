@@ -1,3 +1,3 @@
 from django.shortcuts import render
-
-# Create your views here.
+from .serializers import (CustomerSerializer, MovieSerializer, MovieFileSerializer, ReviewSerializer)
+from .models import (Customer, Movie, MovieFile, Review)
