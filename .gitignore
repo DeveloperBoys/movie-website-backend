@@ -15,8 +15,6 @@ downloads/
 eggs/
 .eggs/
 lib/
-media/
-db.sqlite3/
 lib64/
 parts/
 sdist/
