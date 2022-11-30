@@ -26,3 +26,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['user', 'movie', 'title', 'review', 'reviewed_at']
+
+
+class SearchMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ['title']

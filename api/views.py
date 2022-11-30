@@ -1,26 +1,15 @@
+from django.http import HttpResponse
 from rest_framework.response import Response
-from rest_framework import viewsets, status
-from .serializers import (CustomerSerializer, MovieSerializer, MovieFileSerializer, ReviewSerializer)
+from rest_framework import viewsets, status, generics, filters
+from .serializers import (CustomerSerializer, MovieSerializer, MovieFileSerializer, ReviewSerializer,
+                          SearchMovieSerializer)
 from .models import (Customer, Movie, MovieFile, Review)
 
 
 class CustomerViewSet(viewsets.GenericViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    pagination_class = None
     http_method_names = ['get', 'post']
-
-    # def list(self, request, *args, **kwargs):
-    #     username = self.queryset.username
-    #     image = self.queryset.image_url
-    #     email = self.queryset.email
-    #     payload = {
-    #         'username': username,
-    #         'image': image,
-    #         'email': email
-    #     }
-    #
-    #     return Response(payload)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer_class()
@@ -28,10 +17,10 @@ class CustomerViewSet(viewsets.GenericViewSet):
         if serializer.is_valid():
             obj = Customer.objects.create(**serializer.validated_data)
             payload = {
-                'success': 'User is create successfully',
+                'success': 'User created successfully',
                 'created_obj': obj
             }
-            return Response(payload, status=status.HTTP_201_CREATED)
+            return HttpResponse(payload, status=status.HTTP_201_CREATED)
         else:
             Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -53,7 +42,7 @@ class MovieFileViewSet(viewsets.ReadOnlyModelViewSet):
 class ReviewViewSet(viewsets.GenericViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = None
+    # permission_classes = None
     http_method_names = ['get', 'post']
 
     def create(self, request, *args, **kwargs):
@@ -62,9 +51,17 @@ class ReviewViewSet(viewsets.GenericViewSet):
         if serializer.is_valid():
             obj = Review.objects.create(**serializer.validated_data)
             payload = {
-                'success': 'Comment is create successfully',
+                'success': 'Comment created successfully',
                 'created_obj': obj
             }
             return Response(payload, status=status.HTTP_201_CREATED)
         else:
             Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SearchMovieViewSet(generics.ListAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = SearchMovieSerializer
+    permission_classes = None
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
